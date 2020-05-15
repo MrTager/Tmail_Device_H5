@@ -51,7 +51,7 @@ export default {
     setDeviceStatus({ state, commit }, attrs) {
       if (state.attr.onlinestate !== 'online') {
         console.error('**设备不在线 无法操控**')
-        return;
+        //return;
       }
 
       // 更新数据
@@ -62,6 +62,10 @@ export default {
       // 设置数据
       AI.setDeviceStatus(attrs).then((resp) => {
         console.log('setDeviceStatus：', resp)
+       
+        if(resp.code === 'SET_FAIL'){
+         //属性设置失败
+        }
       }).catch((err) => {
         console.log(err)
       })

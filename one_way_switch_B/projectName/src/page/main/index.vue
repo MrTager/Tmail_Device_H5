@@ -37,9 +37,9 @@
           <ol>
               <li v-for="(testData,i) in testDatas" :key="i">
                   <hr v-if="i>0">
-                  <div class="itemTitle"><div>{{testData.title}}</div></div>
+                  <div class="itemTitle"><div>{{testData.functionName}}</div></div>
                   <ol>
-                      <li class="itemTxt" v-for="(item,j) in testData.data" :key="j" >
+                      <li class="itemTxt" v-for="(item,j) in testData.corpusList" :key="j" >
                             <div class="itemColorTxt" :style="'width:'+(item.length*itemFontSize+60)+'px;'">
                               <div class="txtItem">{{item}}</div>
                             </div>
@@ -52,7 +52,7 @@
     </div>
     </tab>
     </div>
-    
+
 
     <!-- 设备状态 -->
     <!-- <push-bar
@@ -66,8 +66,10 @@
 
 <script type="text/ecmascript-6">
 import { mapState } from 'vuex';
-import { PushBar, Tab, TabItem,Icon } from 'genie-ui';
-
+import { PushBar, Tab, TabItem,Icon  } from 'genie-ui';
+import Vue from 'vue'
+import { Toast } from 'genie-ui'
+Vue.use(Toast)
 export default {
   name: 'Main',
   components: {
@@ -75,16 +77,17 @@ export default {
     Tab,
     TabItem,
     Icon,
+   
   },
   data() {
     return {
         navList: [ { label: '控制' }, { label: '口令' } ],
-        navWidth:180,
-        range4:{ value: 0, label: '开关', iconStyle: { color: '#1c8bfe' },backgroundColor:"#F2F9FF" },
+        navWidth: 180,
+        range4:{ value: 0, label: '开关', iconStyle: { color: '#1c8bfe' } , backgroundColor:"#F2F9FF" },
         iconSize:24,
         testDatas:[
-              {title:'开关',data:['关闭开关','打开开关','开关开了吗','开关了吗']},
-              {title:'定时控制开关',data:['今天晚上九点关闭开关','明天上午八点关闭开关','明天二十点关闭开关','五分钟后关闭开关','一小时五分钟后关闭开关','五分钟后打开开关','今天晚上六点打开开关','明天晚上八点打开开关','明天二十点打开开关','十分钟后打开开关','一小时十分钟后打开开关']}
+              {functionName:'开关',corpusList:['关闭开关','打开开关','开关开了吗','开关了吗']},
+              {functionName:'定时控制开关',corpusList:['今天晚上九点关闭开关','明天上午八点关闭开关','明天二十点关闭开关','五分钟后关闭开关','一小时五分钟后关闭开关','五分钟后打开开关','今天晚上六点打开开关','明天晚上八点打开开关','明天二十点打开开关','十分钟后打开开关','一小时十分钟后打开开关']}
           ],
           //色块内文字的大小，用于色块长度计算
         itemFontSize:16,
@@ -93,6 +96,7 @@ export default {
         //倒计时显示条
         remainTime:0,
         timingStatue:"",
+
         };
         
         
@@ -116,16 +120,17 @@ export default {
         //   descColor: '#4a4a4a',
         //   desc: onlinestate
         // }, 
-        {
-          check: powerstate,
-          text: '开关状态',
-          type: 'switch',
-          clickBack: (val) => {
-            this.$store.dispatch('setDeviceStatus', {
-              powerstate: val.check ? 0 : 1
-            });
-          }
-        }]
+        // {
+        //   check: powerstate,
+        //   text: '开关状态',
+        //   type: 'switch',
+        //   clickBack: (val) => {
+        //     this.$store.dispatch('setDeviceStatus', {
+        //       powerstate: val.check ? 0 : 1
+        //     });
+        //   }
+        // }
+        ]
       },
 
       // 在线状态
@@ -151,8 +156,21 @@ export default {
     //轮询定时
     setInterval(()=>{
        this.updateTimeCloud();
+       
+        AI.getDeviceStatus().then((resp) => {
+          console.log("返回获取的设备状态",resp);  // 返回获取的设备状态
+        }).catch((res) => {
+          console.log('获取设备状态失败返回', res);
+        });
+ 
     },3000)
-   
+
+    AI.getProductFunctionCorpus().then((resp) => {
+      console.log(resp);  // 返回语料信息
+      this.testDatas = resp.model
+    }).catch((res) => {
+      console.log('失败返回', res);
+    });
 
   },
   beforeDestroy() {
@@ -167,6 +185,15 @@ export default {
     },
     //按钮切换
     btnClick(){
+      // if(this.onlinestate === "离线"){
+      //   this.$toast({
+      //     type: 'error',
+      //     text: '设备不在线 无法操控',
+      //     duration: 2500
+      //   })
+      // }else{
+
+      // }
        if(this.powerstate){
            this.$store.dispatch('setDeviceStatus', {
            powerstate: 0
