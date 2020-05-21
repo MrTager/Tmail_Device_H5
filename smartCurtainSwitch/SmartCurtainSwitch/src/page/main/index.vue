@@ -60,11 +60,7 @@
           </div>   
         </div>
       </tab>
-      
     </div>
-    
-
-    
   </div>
 </template>
 
@@ -310,7 +306,6 @@ export default {
   .tab{
     height: 49px;
     background-color: white;
-
     .tabnav{
       background-color: white;
       border-top: 0.5px solid rgb(115,190,230);
