@@ -40,10 +40,8 @@ export default {
           commit('updateDeviceStatus', { data: resp.model })
         },
         errorCallback: (error) => { console.log('stateChange ERROR:', error) }
-      });
-      
+      });    
     },
-
     /**
      * 设置设备属性
      * @param {*} attrs 需要设置的属性集合

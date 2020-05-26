@@ -77,29 +77,25 @@ export default {
     Tab,
     TabItem,
     Icon,
-   
   },
   data() {
     return {
-        navList: [ { label: '控制' }, { label: '口令' } ],
-        navWidth: 180,
-        range4:{ value: 0, label: '开关', iconStyle: { color: '#1c8bfe' } , backgroundColor:"#F2F9FF" },
-        iconSize:24,
-        testDatas:[
-              {functionName:'开关',corpusList:['关闭开关','打开开关','开关开了吗','开关了吗']},
-              {functionName:'定时控制开关',corpusList:['今天晚上九点关闭开关','明天上午八点关闭开关','明天二十点关闭开关','五分钟后关闭开关','一小时五分钟后关闭开关','五分钟后打开开关','今天晚上六点打开开关','明天晚上八点打开开关','明天二十点打开开关','十分钟后打开开关','一小时十分钟后打开开关']}
-          ],
-          //色块内文字的大小，用于色块长度计算
-        itemFontSize:16,
-        //是否有定时数据
-        timeDataFlag:false,
-        //倒计时显示条
-        remainTime:0,
-        timingStatue:"",
-
-        };
-        
-        
+      navList: [ { label: '控制' }, { label: '口令' } ],
+      navWidth: 180,
+      range4:{ value: 0, label: '开关', iconStyle: { color: '#1c8bfe' } , backgroundColor:"#F2F9FF" },
+      iconSize:24,
+      testDatas:[
+            {functionName:'开关',corpusList:['关闭开关','打开开关','开关开了吗','开关了吗']},
+            {functionName:'定时控制开关',corpusList:['今天晚上九点关闭开关','明天上午八点关闭开关','明天二十点关闭开关','五分钟后关闭开关','一小时五分钟后关闭开关','五分钟后打开开关','今天晚上六点打开开关','明天晚上八点打开开关','明天二十点打开开关','十分钟后打开开关','一小时十分钟后打开开关']}
+      ],
+      //色块内文字的大小，用于色块长度计算
+      itemFontSize:16,
+      //是否有定时数据
+      timeDataFlag:false,
+      //倒计时显示条
+      remainTime:0,
+      timingStatue:"",
+    };
   },
   computed: {
     
@@ -155,14 +151,12 @@ export default {
     
     //轮询定时
     setInterval(()=>{
-       this.updateTimeCloud();
-       
-        AI.getDeviceStatus().then((resp) => {
-          console.log("返回获取的设备状态",resp);  // 返回获取的设备状态
-        }).catch((res) => {
-          console.log('获取设备状态失败返回', res);
-        });
- 
+      this.updateTimeCloud();
+      AI.getDeviceStatus().then((resp) => {
+        console.log("返回获取的设备状态",resp);  // 返回获取的设备状态
+      }).catch((res) => {
+        console.log('获取设备状态失败返回', res);
+      });
     },3000)
 
     AI.getProductFunctionCorpus().then((resp) => {
@@ -194,7 +188,7 @@ export default {
       // }else{
 
       // }
-       if(this.powerstate){
+      if(this.powerstate){
            this.$store.dispatch('setDeviceStatus', {
            powerstate: 0
            });    
